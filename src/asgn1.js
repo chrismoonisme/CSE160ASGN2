@@ -75,6 +75,37 @@ function connectVariablesToGLSL(){
 
 }
 
+// Pumpkin-drawing function
+function drawPumpkin() {
+    // Clear existing shapes
+    g_shapesList = [];
+
+    // Define pumpkin triangles (positions normalized to [-1, 1] range)
+    const triangles = [
+
+        [[-0.4, 0.3], [0, 0.3], [-0.2, 0.4]],
+
+        [[0.4, 0.3], [0, 0.3], [0.2, 0.4]],
+
+        [[-0.2, -0.3], [0.2, -0.3], [0, 0]],
+        
+    ];
+
+    // Create and add triangles to g_shapesList
+    for (const triangle of triangles) {
+        const t = new Triangle();
+        t.position = triangle[0];
+        t.vertex2 = triangle[1]; // Assume Triangle class has support for 3 vertices
+        t.vertex3 = triangle[2];
+        t.color = [1.0, 0.5, 0.0, 1.0]; // Pumpkin color
+        t.size = 20;
+        g_shapesList.push(t);
+    }
+
+    // Render all shapes
+    renderAllShapes();
+}
+
 //UI globals
 let g_selectedColor = [1,1,1,1];
 let g_selectedSize = 5;
@@ -83,6 +114,12 @@ let g_selectedSegments = 12;
 
 //html ui
 function addActionsforHtmlUI(){
+
+    document.getElementById('pumpkin').onclick = function(){
+
+        drawPumpkin();
+
+    };
 
     document.getElementById('clearButton').onclick = function(){
 
