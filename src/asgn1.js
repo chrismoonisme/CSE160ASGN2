@@ -28,7 +28,7 @@ let u_Size;
 function setupWebGL(){
 
     //get canvas elem
-    canvas = document.getElementById('webgl');
+    canvas = document.getElementById('webgl', {preserveDrawingBuffer: true});
 
     //get rendering context for webgl
     gl = getWebGLContext(canvas);
@@ -86,6 +86,16 @@ let g_selectedSize = 5;
 //html ui
 function addActionsforHtmlUI(){
 
+    document.getElementById('clearButton').onclick = function(){
+
+        g_shapesList = [];
+
+        renderAllShapes();
+
+        //console.log("gooosey")
+
+    };
+
     document.getElementById('redSlide').addEventListener('mouseup', function(){
 
         g_selectedColor[0] = this.value/100;
@@ -127,6 +137,16 @@ function main() {
     // Register function (event handler) to be called on a mouse press
     canvas.onmousedown = click;
 
+    canvas.onmousemove = function(ev){
+
+        if(ev.buttons == 1){
+
+            click(ev);
+
+        }
+
+    };
+
     // Specify the color for clearing <canvas>
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -134,6 +154,47 @@ function main() {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
 }
+
+//point class
+class Point{
+
+    //class constructor
+    constructor(){
+        
+        this.type = 'point';
+
+        this.position = [0.0, 0.0, 0.0];
+
+        this.color = [1,1,1,1];
+
+        this.size = 5;
+
+    }
+
+    render() {
+
+        var xy = this.position;
+        var rgba = this.color;
+        var size = this.size;
+
+        // Pass the position of a point to a_Position variable
+        gl.vertexAttrib3f(a_Position, xy[0], xy[1], 0.0);
+
+        // Pass the color of a point to u_FragColor variable
+        gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
+
+        // Pass the color of a point to u_FragColor variable
+        gl.uniform1f(u_Size, size);
+
+        // Draw
+        gl.drawArrays(gl.POINTS, 0, 1);
+
+    }
+
+}
+
+//shape list
+var g_shapesList = [];
 
 var g_points = [];  // The array for the position of a mouse press
 var g_colors = [];  // The array to store the color of a point
@@ -144,12 +205,16 @@ function click(ev) {
 
     let [x,y] = convertCoordinatesEventToGL(ev);
 
-    // Store the coordinates to g_points array
-    g_points.push([x, y]);
+    //point object
+    let point = new Point();
 
-    g_colors.push(g_selectedColor.slice());
+    point.position = [x, y];
 
-    g_sizes.push(g_selectedSize);
+    point.color = g_selectedColor.slice();
+
+    point.size = g_selectedSize;
+
+    g_shapesList.push(point);
 
     //draw all shapes in canvas
     renderAllShapes();
@@ -178,25 +243,11 @@ function renderAllShapes(){
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     //rendering
-    var len = g_points.length;
+    var len = g_shapesList.length;
 
     for(var i = 0; i < len; i++) {
 
-        var xy = g_points[i];
-        var rgba = g_colors[i];
-        var size = g_sizes[i];
-
-        // Pass the position of a point to a_Position variable
-        gl.vertexAttrib3f(a_Position, xy[0], xy[1], 0.0);
-
-        // Pass the color of a point to u_FragColor variable
-        gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
-
-        // Pass the color of a point to u_FragColor variable
-        gl.uniform1f(u_Size, size);
-
-        // Draw
-        gl.drawArrays(gl.POINTS, 0, 1);
+        g_shapesList[i].render();
 
     }
 
