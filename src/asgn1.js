@@ -122,6 +122,20 @@ function addActionsforHtmlUI(){
 
 }
 
+//display a cursor 
+function cursor(x, y){
+
+    //clear canvas
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    renderAllShapes();
+
+    //preview brush color and size
+    gl.vertexAttrib3f(a_Position, x, y, 0.0);
+    gl.uniform4f(u_FragColor, g_selectedColor[0], g_selectedColor[1], g_selectedColor[2], g_selectedColor[3]);
+    gl.uniform1f(u_Size, g_selectedSize);
+    gl.drawArrays(gl.POINTS, 0, 1);
+}
+
 //main
 function main() {
 
@@ -145,6 +159,10 @@ function main() {
 
         }
 
+        let [x, y] = convertCoordinatesEventToGL(ev);
+
+        cursor(x, y);
+
     };
 
     // Specify the color for clearing <canvas>
@@ -152,44 +170,6 @@ function main() {
 
     // Clear <canvas>
     gl.clear(gl.COLOR_BUFFER_BIT);
-
-}
-
-//point class
-class Point{
-
-    //class constructor
-    constructor(){
-        
-        this.type = 'point';
-
-        this.position = [0.0, 0.0, 0.0];
-
-        this.color = [1,1,1,1];
-
-        this.size = 5;
-
-    }
-
-    render() {
-
-        var xy = this.position;
-        var rgba = this.color;
-        var size = this.size;
-
-        // Pass the position of a point to a_Position variable
-        gl.vertexAttrib3f(a_Position, xy[0], xy[1], 0.0);
-
-        // Pass the color of a point to u_FragColor variable
-        gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
-
-        // Pass the color of a point to u_FragColor variable
-        gl.uniform1f(u_Size, size);
-
-        // Draw
-        gl.drawArrays(gl.POINTS, 0, 1);
-
-    }
 
 }
 
