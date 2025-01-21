@@ -76,12 +76,10 @@ function connectVariablesToGLSL(){
 }
 
 //UI globals
-
-//color global var
 let g_selectedColor = [1,1,1,1];
-
-//size global
 let g_selectedSize = 5;
+let g_selectedType = 0;
+let g_selectedSegments = 12;
 
 //html ui
 function addActionsforHtmlUI(){
@@ -93,6 +91,24 @@ function addActionsforHtmlUI(){
         renderAllShapes();
 
         //console.log("gooosey")
+
+    };
+
+    document.getElementById('square').onclick = function(){
+
+        g_selectedType = 0;
+
+    };
+
+    document.getElementById('triangle').onclick = function(){
+
+        g_selectedType = 1;
+
+    };
+
+    document.getElementById('circle').onclick = function(){
+
+        g_selectedType = 2;
 
     };
 
@@ -120,20 +136,51 @@ function addActionsforHtmlUI(){
 
     });
 
+    document.getElementById('sCount').addEventListener('mouseup', function(){
+
+        g_selectedSegments = this.value;
+
+    });
+
 }
 
-//display a cursor 
+//dynamic cursor
 function cursor(x, y){
 
     //clear canvas
     gl.clear(gl.COLOR_BUFFER_BIT);
     renderAllShapes();
 
-    //preview brush color and size
-    gl.vertexAttrib3f(a_Position, x, y, 0.0);
-    gl.uniform4f(u_FragColor, g_selectedColor[0], g_selectedColor[1], g_selectedColor[2], g_selectedColor[3]);
-    gl.uniform1f(u_Size, g_selectedSize);
-    gl.drawArrays(gl.POINTS, 0, 1);
+    //cursor
+    let cursorShape;
+
+    //choose shape based on current shape selected
+    if (g_selectedType == 0){
+
+        cursorShape = new Point();
+
+    }else if(g_selectedType == 1){
+
+        cursorShape = new Triangle();
+
+    }else if (g_selectedType == 2){
+
+        cursorShape = new Circle();
+    }
+
+    //init
+    if(cursorShape){
+
+        cursorShape.position = [x, y];
+
+        cursorShape.color = g_selectedColor.slice();
+
+        cursorShape.size = g_selectedSize;
+
+        //render
+        cursorShape.render();
+    }
+
 }
 
 //main
@@ -186,7 +233,21 @@ function click(ev) {
     let [x,y] = convertCoordinatesEventToGL(ev);
 
     //point object
-    let point = new Point();
+    let point;
+
+    if(g_selectedType == 0){
+
+        point = new Point();
+
+    }else if(g_selectedType == 1){
+
+        point = new Triangle();
+
+    }else if(g_selectedType == 2){
+
+        point = new Circle();
+
+    }
 
     point.position = [x, y];
 

@@ -1,5 +1,5 @@
 //triangle class
-class Triangle{
+class Circle{
 
     //class constructor
     constructor(){

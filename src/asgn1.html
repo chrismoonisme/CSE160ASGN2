@@ -1,3 +1,4 @@
+<!--Christopher Moon, ckmoon@ucsc.edu-->
 
 <!DOCTYPE html>
 
@@ -17,20 +18,43 @@
     <div>
 
        <button type = "button" id = "clearButton"> Clear Canvas </button>
+       <p>
+
+    </div>
+
+    <div>
+
+        <div>  Drawing Mode: (Awesomeness point: cursor will preview color, shape, and size dynamically on the canvas)</div>
+
+        <button type = "button" id = "square"> Square </button>
+
+        <button type = "button" id = "triangle"> Triangle </button>
+
+        <button type = "button" id = "circle"> Circle </button>
+
+        <p>
 
     </div>
 
 
     <div>
 
-        <p>
+        <div>Shape Color:</div>
+
         Red <input type = "range" min = "0" max = "100" value = "100" class = "slider" id = "redSlide">
-        <p>
+        
         Green <input type = "range" min = "0" max = "100" value = "100" class = "slider" id = "greenSlide">
-        <p>
+        
         Blue <input type = "range" min = "0" max = "100" value = "100" class = "slider" id = "blueSlide">
+
         <p>
+
+    </div>
+
+    <div>
+
         Shape Size <input type = "range" min = "5" max = "40" value = "0" class = "slider" id = "sizeSlide">
+        (Circles) Segment Count <input type = "range" min = "4" max = "12" value = "12" class = "slider" id = "sCount">
 
     </div>
 
@@ -40,7 +64,8 @@
     <script src="../lib/cuon-utils.js"></script>
 
     <script src = "point.js"></script>
-
+    <script src = "triangle.js"></script>
+    <script src = "circle.js"></script>
 
     <script src="asgn1.js"></script>
 
