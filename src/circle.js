@@ -4,17 +4,19 @@ class Circle{
     //class constructor
     constructor(){
         
-        this.type = 'triangle';
+        this.type = 'circle';
 
         this.position = [0.0, 0.0, 0.0];
 
         this.color = [1,1,1,1];
 
+        this.sCount = g_selectedSegments;
+
         this.size = 5;
 
     }
 
-    render() {
+    render() {  
 
         var xy = this.position;
         var rgba = this.color;
@@ -23,13 +25,31 @@ class Circle{
         // Pass the color of a point to u_FragColor variable
         gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
 
-        // Pass the color of a point to u_FragColor variable
-        gl.uniform1f(u_Size, size);
-
         // Draw
+
         var d = this.size/200;
 
-        drawTriangle([xy[0]-d/2, xy[1]-d/2, xy[0]+d/2, xy[1]-d/2, xy[0], xy[1]+d/2]);
+        var angleStep = 360/this.sCount;
+
+        for(var angle = 0; angle < 360; angle += angleStep){
+
+            let centerPt = [xy[0], xy[1]];
+
+            let angle1 = angle;
+
+            let angle2 = angle + angleStep;
+
+            let vec1 = [Math.cos(angle1*Math.PI/180)*d, Math.sin(angle1*Math.PI/180)*d];
+
+            let vec2 = [Math.cos(angle2*Math.PI/180)*d, Math.sin(angle2*Math.PI/180)*d];
+
+            let pt1 = [centerPt[0]+vec1[0], centerPt[1]+vec1[1]];
+
+            let pt2 = [centerPt[0]+vec2[0], centerPt[1]+vec2[1]];
+
+            drawTriangle( [xy[0], xy[1], pt1[0], pt1[1], pt2[0], pt2[1]] );
+
+        }
 
     }
 
